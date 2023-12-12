@@ -1,0 +1,19 @@
+/* App.css */
+.container {
+  display: flex;
+  justify-content: space-between; /* Spacing between columns */
+}
+
+.posts-container {
+  flex: 1;
+  padding: 10px;
+  border-right: 1px solid #ccc; /* Add a border to separate columns */
+  margin-right: 50px; /* Add margin to create space between columns */
+}
+
+.actions-container {
+  flex: 1;
+  padding: 10px;
+}
+
+/* Additional styling can be applied as needed */
