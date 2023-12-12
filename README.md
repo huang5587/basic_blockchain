@@ -1,4 +1,4 @@
-# Switcheo Backend Internship - Problem 5 - CRUD Interface for Blockchain resource - Jun Han Huang
+# Basic Blockchain
 
 ## Overview
 This directory contains a full-stack CRUD implementation for blog posts. 
