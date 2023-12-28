@@ -1,7 +1,7 @@
 # Basic Blockchain
 
 ## Overview
-This directory contains a full-stack CRUD implementation for blog posts. 
+In this project I used CosmosSDK to build a blockchain from scratch that allows for the transaction and monitoring of blog posts. Ontop of this I also built a blockchain indexer with a front end client to allow for users to query and view blogs that are stored on the chain. 
 ### blog
 blog contains the blockchain itself. The blockchain leverages CosmosSDK and Ignite CLI extensively to conduct the manipulation of blog posts and the maintenance of transactions across nodes in the blockchain. 
 ### blogclient
