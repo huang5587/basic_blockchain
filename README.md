@@ -14,7 +14,14 @@ blogclient/frontend contains a react frontend interface to allow the user to mor
 ### blog
 Requires IgniteCLI to and Golang to be installed
 
+curl [https://get.ignite.com/cli!](https://get.ignite.com/cli@v0.24.0) | bash
+
+sudo mv ignite /usr/local/bin/
+
+https://docs.ignite.com/welcome/install
+
 Blockchain can be run by executing the following while in the blog directory.
+
 ```
 ignite chain serve
 ```
