@@ -168,7 +168,7 @@ func deletePost(ctx context.Context, client cosmosclient.Client, account cosmosa
 
 	_, err = client.BroadcastTx(ctx, account, msg)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Post doesnt exist", err)
 		return err
 	}
 	return nil
@@ -219,4 +219,3 @@ func main() {
 		)(r)))
 
 }
-
