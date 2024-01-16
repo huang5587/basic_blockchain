@@ -13,7 +13,7 @@ function App() {
 
   const [posts, setPosts] = useState([]); 
 
-  useEffect(() => {
+  const fetchPosts = useEffect(() => {
       fetch('http://127.0.0.1:8080/posts/list')
       .then((response) => response.json())
       .then((data) => {
@@ -22,8 +22,22 @@ function App() {
       })
       //.then((data) => setPosts(data.title))
       .catch((error) => console.error('Error fetching posts:', error));
-  }, []);
+  }, [title, body, deleteId, updateTitle, updateBody, id]);
 
+  const validateInputs = () => {
+
+    /**
+     * 1. createPost, updatePost needs body, id, title
+     * 2. cannot deletePost if ID doesnt exist. 
+     * 3. IDs can only be numbers?
+     * 4. Max length for title and body. 
+     */
+    // Validate title, body, id, etc.
+    if (!title || !body) {
+      console.error('Title and body are required.');
+      return false;
+    }
+  }
   const handleCreatePost = () => {
     fetch('http://127.0.0.1:8080/posts/create', {
       method: 'POST',
@@ -36,7 +50,7 @@ function App() {
         if (response.ok) {
           setTitle('');
           setBody('');
-          
+          fetchPosts();
         } else {
           console.error('Error creating post:', response.statusText);
         }
@@ -56,6 +70,7 @@ function App() {
       .then((response) => {
         if (response.ok) {
           setDeleteId(''); // Clear the delete ID input
+          fetchPosts();
         } else {
           console.error('Error deleting post:', response.statusText);
         }
@@ -77,6 +92,7 @@ function App() {
           setUpdateTitle('');
           setUpdateBody('');
           setPostId(''); // Clear the ID input
+          fetchPosts();
         } else {
           console.error('Error updating post:', response.statusText);
         }
@@ -86,7 +102,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Switcheo Blog Post Interface</h1>
+      <h1>A Blockchain of Blog Posts</h1>
       <div className="container">
 
          {/* Actions Container */}
