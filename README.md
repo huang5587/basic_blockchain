@@ -1,16 +1,16 @@
-# Basic Blockchain
+# Blockchain of Blogs
 
 ## Overview
 In this project I used CosmosSDK to build a blockchain that allows for the transaction and monitoring of blog posts. Ontop of this I also built a blockchain indexer with a front end client to allow for users to query and view blogs that are stored on the chain. 
 #### blog
-blog contains the blockchain itself. The blockchain leverages CosmosSDK and Ignite CLI extensively to conduct the manipulation of blog posts and the maintenance of transactions across nodes in the blockchain. 
+The blog directory contains the blockchain itself. The blockchain was created with CosmosSDK and IgniteCLI to adhere to the Cosmos ecosystem conventions and practices. 
 #### blogclient
-blogclient written in golang, is the backend API for the blockchain. It recieves CRUD requests from the frontend and executes the command upon the blockchain accordingly.
+blogclient is an API written in Golang. The API parses incoming HTTP requests into their appropriate blockchain functions. This API serves as a backend to the frontend interface.
 #### blogclient/frontend
-blogclient/frontend contains a react frontend interface to allow the user to more easily manipulate the blockchain. A list of all posts is also displayed.
+blogclient/frontend contains a reactJS frontend interface that allows the user to easily interface with the blockchain. A list of all posts is also displayed.
 
 ## Dependencies
-IgniteCLI v0.25.1 and Golang are required to run the blockchain. IgniteCLI can be installed with the following commands.
+IgniteCLI v0.25.1 and Golang are required to run the blockchain. IgniteCLI can be installed with the following commands. Other versions of IgniteCLI may cause compatability issues.
 
 ```
 curl https://get.ignite.com/cli@v0.25.1 | bash
@@ -18,34 +18,27 @@ curl https://get.ignite.com/cli@v0.25.1 | bash
 sudo mv ignite /usr/local/bin/
 
 ```
-The frontend is made with react and deployed using vite. 
-#### blogclient
-Requires golang. Backend API can be run by executing the following from the blogclient directory:
+The frontend is deployed using Vite. This requires a NodeJS version of at least 18. 
+
+## Usage
+First, start the blockchain by navigating to inside of the blog directory and run:
+```
+ignite chain serve
+```
+Second, run the backend API by executing the following from the blogclient directory:
 ```
 go run main.go
 ```
-### frontend
-The frontend is made with react and deployed using Vite. This requires a NodeJS version of 18 or higher.
-
-The front end is hosted by running the following from switcheo_JunHan/problem5/blogclient/frontend/blogFrontend directory:
+Third, run the frontend client by executing the following from ~/blogclient/frontend/blogFrontend/..
 ```
 npm install
 npm run dev 
 ```
+Open the front-end client at http://localhost:5173/ and you can begin to interface with the blockchain.
 
-## Challenges
-This was my first time ever using golang and I enjoyed the challenge of learning a new language. In particular finishing this project was very instructive for the concept of contexts in golang.
+## Motivations & Learnings
 
-## Future Improvements
-Some immediate improvements that can be made for each area given more time. 
-### blog
-I'd like to explore the creation and manipulation of multiple resources upon the same blockchain.
-### blogclient
-It would be meaningful to expand the code to enable use from multiple accounts (as opposed to just Alice).
-### frontend
-I would like to make the list of posts reactive meaning that changes made to any posts are reflected in real-time on the interface. 
+This project was undertaken to prepare myself for an internship position at a Cosmos ecosystem blockchain startup. In completing this project I gained familiarity with the unique mechanics and architecture of a Cosmos blockchain, and in blockchain development more generally. In particular, I found this extremely beneficial to gain fluency with Golang contexts and in Cosmos keepers. I found there are many unqiue Golang and Cosmos features that work in tandem to provide abstraction, security and modularity to a Cosmos blockchain. As these convetions are standardized across the Cosmos ecosystem, I found these specific areas to be immediately applicable in my subsequent work experience. 
 
-I would also like to implemenet client + serverside validation to ensure smooth operations.
-
-
+Additionally, when creating the frontend client, I enjoyed the challenge of creating a reactive interface that automatically updated after new operations. Prior to this project I had limited exposure to Golang. Completing the blockchain and API gave me practical exposure in building and running multi module Golang apps, as well as general fluency in Golang syntax and best practices. 
 
