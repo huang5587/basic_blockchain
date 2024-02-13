@@ -13,7 +13,7 @@ blogclient/frontend contains a react frontend interface to allow the user to mor
 IgniteCLI v0.24.0 and Golang are required to run the blockchain. IgniteCLI can be installed with the following commands.
 
 ```
-curl [https://get.ignite.com/cli!](https://get.ignite.com/cli@v0.24.0) | bash
+curl https://get.ignite.com/cli@v0.24.0 | bash
 
 sudo mv ignite /usr/local/bin/
 
