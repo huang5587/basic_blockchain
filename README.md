@@ -10,10 +10,10 @@ blogclient written in golang, is the backend API for the blockchain. It recieves
 blogclient/frontend contains a react frontend interface to allow the user to more easily manipulate the blockchain. A list of all posts is also displayed.
 
 ## Dependencies
-IgniteCLI v0.24.0 and Golang are required to run the blockchain. IgniteCLI can be installed with the following commands.
+IgniteCLI v0.25.1 and Golang are required to run the blockchain. IgniteCLI can be installed with the following commands.
 
 ```
-curl https://get.ignite.com/cli@v0.24.0 | bash
+curl https://get.ignite.com/cli@v0.25.1 | bash
 
 sudo mv ignite /usr/local/bin/
 
