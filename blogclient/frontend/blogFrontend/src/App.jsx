@@ -17,17 +17,23 @@ function App() {
   const [deleteId, setDeleteId] = useState(''); 
   const [posts, setPosts] = useState([]); 
 
+  //fetch posts on mounting
+  useEffect(() => {
+    fetchPosts();
+  }, [title, body, deleteId, updateTitle, updateBody, id]);
+
   //fetchPosts() gets the latest list of posts from the blockchain
   // it is called after every operation so the frontend reactively displays changes as and when they happen.
-  const fetchPosts = useEffect(() => {
-      fetch('http://127.0.0.1:8080/posts/list')
+  const fetchPosts = () => {
+    fetch('http://127.0.0.1:8080/posts/list')
       .then((response) => response.json())
       .then((data) => {
         console.log('Data received from API:', data.Post); 
         setPosts(data.Post)
       })
       .catch((error) => console.error('Error fetching posts:', error));
-  }, [title, body, deleteId, updateTitle, updateBody, id]);
+  };
+
 
   //declare handler functions for each operation. They are executed when their respective buttons are pressed by user. 
   const handleCreatePost = () => {
@@ -95,24 +101,23 @@ function App() {
 
   return (
     <div className="App">
-      <h1>A Blockchain of Blog Posts</h1>
+      <h1>Blockchain of Blog Posts</h1>
       <div className="container">
-
-         <div className="actions-container">
-          <h2>All Posts</h2>
-          <ul>
-            {posts.map((post) => (
-              <li key={post.id}>
-                <strong>ID: {post.id}</strong>
-                <p>Title: {post.title}</p>
-                <p>Body: {post.body}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-
+         {posts && posts.length > 0 && (  // Check if posts is not null and not empty. If unchecked, website will crash when no posts exist.
+          <div className="actions-container">
+            <ul>
+              {posts.map((post) => (
+                <li key={post.id}>
+                  <h3>{post.title}</h3>
+                  <p style={{ fontStyle: 'italic', fontWeight: 'bold', fontSize: '10pt' }}>Post no.{post.id}</p>
+                  <p>{post.body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="posts-container">
-        <h2>Create a New Post</h2>
+        <h2>Create New Post</h2>
           <div>
             <label>Title:</label>
             <br></br>
@@ -136,7 +141,7 @@ function App() {
 
           <h2>Update Post</h2>
           <div>
-            <label>ID:</label>
+            <label>Post Number:</label>
             <br></br>
             <input
               type="text"
@@ -167,7 +172,7 @@ function App() {
 
           <h2>Delete Post</h2>
           <div>
-            <label>Delete ID:</label>
+            <label>Delete Post Number:</label>
             <br></br>
             <input
               type="text"

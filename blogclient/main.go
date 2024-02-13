@@ -6,6 +6,8 @@ blogclient/main.go
 	create and send a transaction to the blockchain for execution.
 
 	A user can send requests to this API by using the frontend client contained in blogclient/frontend.
+
+	If there are no existing posts in the chain, the welcome posts will be created.
 */
 
 package main
@@ -198,21 +200,47 @@ func listPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Call listPost() to retrieve the posts
-	queryResp := listPost(ctx, client)
+	queryResp, err := listPost(ctx, client)
+	if err != nil {
+		log.Fatal("Posts doesnt exist", err)
+		return
+	}
 	// Serialize the response to JSON and send it in the response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(queryResp)
 }
 
-func listPost(ctx context.Context, client cosmosclient.Client) *types.QueryAllPostResponse {
+func listPost(ctx context.Context, client cosmosclient.Client) (*types.QueryAllPostResponse, error) {
 	queryClient := types.NewQueryClient(client.Context())
 	// Query the blockchain using the client's `PostAll` method
 	// to get all posts store all posts in queryResp
 	queryResp, err := queryClient.PostAll(ctx, &types.QueryAllPostRequest{})
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	return queryResp
+	return queryResp, nil
+}
+
+// initalizePosts() populates the blockchain with a welcome message post. It is called when there are no existing posts in the blockchain.
+func initializePosts(ctx context.Context, client cosmosclient.Client, account cosmosaccount.Account) {
+	defaultPosts := []struct {
+		Title string
+		Body  string
+	}{
+		{"Welcome to Blockchain of Blogs!", "This website serves as an interface to create, update and delete blog posts upon the blockchain."},
+		{"Usage", "Each field connects to a dedicated route on the backend API. Pressing its button will send the input data to the API, which will execute the desired operation upon the blockchain."},
+		{"Motivations", "This project was completed to gain experience and familiarity with the unique architecture and mechanics of Cosmos ecosystem blockchains. In doing so I was able to better prepare myself for an upcoming internship at a Cosmos blockchain startup."},
+		{"Please go to my github repositry for further information:", "https://github.com/huang5587/basic_blockchain"},
+		//add additional default posts here if desired.
+	}
+
+	//create default posts on blockchain.
+	for _, post := range defaultPosts {
+		err := createPost(ctx, client, account, post.Title, post.Body)
+		if err != nil {
+			log.Printf("Error creating post: %v", err)
+		}
+	}
 }
 
 func main() {
@@ -224,12 +252,30 @@ func main() {
 	r.HandleFunc("/posts/update", updatePostHandler)
 	r.HandleFunc("/posts/delete", deletePostHandler)
 
-	fmt.Println("Server is listening on :8080")
+	// Create a Cosmos client instance
+	client, err := cosmosclient.New(context.Background(), cosmosclient.WithAddressPrefix("cosmos"))
+	if err != nil {
+		log.Fatalf("Error creating Cosmos client: %v", err)
+	}
+	// Get account from the keyring
+	account, err := client.Account(accountName)
+	if err != nil {
+		log.Fatalf("Error getting account: %v", err)
+	}
+
+	//if there are no exisiting posts then initialize posts before serving API.
+	allPosts, _ := listPost(context.Background(), client)
+	if allPosts.Post == nil {
+		fmt.Println("No existing posts on chain: creating default posts ...")
+		initializePosts(context.Background(), client, account)
+	}
+
+	//Host API on localhost:8080
+	fmt.Println("Blockchain API is listening on localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080",
 		handlers.CORS(
 			handlers.AllowedOrigins([]string{"*"}),
 			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
 			handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
 		)(r)))
-
 }

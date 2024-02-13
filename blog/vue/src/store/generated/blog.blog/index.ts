@@ -192,19 +192,6 @@ export default {
 		},
 		
 		
-		async sendMsgCreatePost({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.BlogBlog.tx.sendMsgCreatePost({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreatePost:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgCreatePost:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgDeletePost({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -215,6 +202,19 @@ export default {
 					throw new Error('TxClient:MsgDeletePost:Init Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new Error('TxClient:MsgDeletePost:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgCreatePost({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.BlogBlog.tx.sendMsgCreatePost({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreatePost:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreatePost:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -232,19 +232,6 @@ export default {
 			}
 		},
 		
-		async MsgCreatePost({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.BlogBlog.tx.msgCreatePost({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreatePost:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgCreatePost:Create Could not create message: ' + e.message)
-				}
-			}
-		},
 		async MsgDeletePost({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -255,6 +242,19 @@ export default {
 					throw new Error('TxClient:MsgDeletePost:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgDeletePost:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCreatePost({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.BlogBlog.tx.msgCreatePost({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreatePost:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreatePost:Create Could not create message: ' + e.message)
 				}
 			}
 		},
