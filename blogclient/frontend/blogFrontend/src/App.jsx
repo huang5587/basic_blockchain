@@ -1,18 +1,24 @@
+/**
+ * App.jsx
+ *  This file contains the code for a reactJS frontend client.
+ *  Allows a user to send CRUD operations to the API contained in bloglient/main.go
+ *  Changes in data should update reactively. 
+ */
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
+  //declare states
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-
   const [updateTitle, setUpdateTitle] = useState(''); 
   const [updateBody, setUpdateBody] = useState(''); 
   const [id, setPostId] = useState(''); 
-
   const [deleteId, setDeleteId] = useState(''); 
-
   const [posts, setPosts] = useState([]); 
 
+  //fetchPosts() gets the latest list of posts from the blockchain
+  // it is called after every operation so the frontend reactively displays changes as and when they happen.
   const fetchPosts = useEffect(() => {
       fetch('http://127.0.0.1:8080/posts/list')
       .then((response) => response.json())
@@ -20,24 +26,10 @@ function App() {
         console.log('Data received from API:', data.Post); 
         setPosts(data.Post)
       })
-      //.then((data) => setPosts(data.title))
       .catch((error) => console.error('Error fetching posts:', error));
   }, [title, body, deleteId, updateTitle, updateBody, id]);
 
-  const validateInputs = () => {
-
-    /**
-     * 1. createPost, updatePost needs body, id, title
-     * 2. cannot deletePost if ID doesnt exist. 
-     * 3. IDs can only be numbers?
-     * 4. Max length for title and body. 
-     */
-    // Validate title, body, id, etc.
-    if (!title || !body) {
-      console.error('Title and body are required.');
-      return false;
-    }
-  }
+  //declare handler functions for each operation. They are executed when their respective buttons are pressed by user. 
   const handleCreatePost = () => {
     fetch('http://127.0.0.1:8080/posts/create', {
       method: 'POST',
@@ -48,6 +40,7 @@ function App() {
     })
       .then((response) => {
         if (response.ok) {
+          //clear input fields after updating and refetch posts.
           setTitle('');
           setBody('');
           fetchPosts();
@@ -59,7 +52,6 @@ function App() {
   };
 
   const handleDeletePost = () => {
-    // POST request to delete a post
     fetch(`http://127.0.0.1:8080/posts/delete`, {
       method: 'POST',
       headers: {
@@ -69,7 +61,8 @@ function App() {
     })
       .then((response) => {
         if (response.ok) {
-          setDeleteId(''); // Clear the delete ID input
+          //clear input fields after updating and refetch posts.
+          setDeleteId(''); 
           fetchPosts();
         } else {
           console.error('Error deleting post:', response.statusText);
@@ -79,19 +72,19 @@ function App() {
   };
 
   const handleUpdatePost = () => {
-    // POST request to update a post
     fetch(`http://127.0.0.1:8080/posts/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-    body: `id=${id}&title=${updateTitle}&body=${updateBody}`, // Include ID in the request
+    body: `id=${id}&title=${updateTitle}&body=${updateBody}`,
     })
       .then((response) => {
         if (response.ok) {
+          //clear input fields after updating and refetch posts.
           setUpdateTitle('');
           setUpdateBody('');
-          setPostId(''); // Clear the ID input
+          setPostId(''); 
           fetchPosts();
         } else {
           console.error('Error updating post:', response.statusText);
@@ -105,7 +98,6 @@ function App() {
       <h1>A Blockchain of Blog Posts</h1>
       <div className="container">
 
-         {/* Actions Container */}
          <div className="actions-container">
           <h2>All Posts</h2>
           <ul>

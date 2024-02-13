@@ -1,3 +1,13 @@
+/*
+blogclient/main.go
+	This file contains the code for a REST API that interfaces with the blockchain.
+	A route is defined for each operation (create, delete, update, and list all blogs)
+	When a route recieves a HTTP request, it calls its corresponding handler function which will
+	create and send a transaction to the blockchain for execution.
+
+	A user can send requests to this API by using the frontend client contained in blogclient/frontend.
+*/
+
 package main
 
 import (
@@ -15,7 +25,7 @@ import (
 	"github.com/ignite/cli/ignite/pkg/cosmosaccount"
 	"github.com/ignite/cli/ignite/pkg/cosmosclient"
 
-	// Importing the types package of your blog blockchain
+	// Importing the types package from blockchain
 	"blog/x/blog/types"
 )
 
@@ -23,6 +33,7 @@ var (
 	accountName = "alice"
 )
 
+/*Create Post */
 func createPostHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	client, err := cosmosclient.New(ctx, cosmosclient.WithAddressPrefix("cosmos"))
@@ -68,6 +79,7 @@ func createPost(ctx context.Context, client cosmosclient.Client, account cosmosa
 	return nil
 }
 
+/*Update Post*/
 func updatePostHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	client, err := cosmosclient.New(ctx, cosmosclient.WithAddressPrefix("cosmos"))
@@ -124,6 +136,7 @@ func updatePost(ctx context.Context, client cosmosclient.Client,
 	return nil
 }
 
+/*Delete Post*/
 func deletePostHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	// Create a Cosmos client instance
@@ -174,6 +187,7 @@ func deletePost(ctx context.Context, client cosmosclient.Client, account cosmosa
 	return nil
 }
 
+/*List Posts*/
 func listPostHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
